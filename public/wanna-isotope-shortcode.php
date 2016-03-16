@@ -67,28 +67,23 @@ class Wanna_Isotope_Shortcode {
 	        $id_output = 'id="' . $id . '"';
 	    }
 
-        if( $term == null ) {
-            $isotope_loop = new WP_Query ( array(
-                'post_type'       => $type,
-                'order'           => $order,
-                'orderby'         => $order_by,
-                'posts_per_page'  => $items
-            )  );
-        } else {
-            $isotope_loop = new WP_Query ( array(
-                'post_type'       => $type,
-                'order'           => $order,
-                'orderby'         => $order_by,
-                'posts_per_page'  => $items,
-                'tax_query' => array(
-                    array(
-                        'taxonomy' => $tax,
-                        'field'    => 'slug',
-                        'terms'    => $term,
-                    ),
+        $isotope_args = array(
+            'post_type'       => $type,
+            'order'           => $order,
+            'orderby'         => $order_by,
+            'posts_per_page'  => $items
+        );
+        if( ! is_null( $term ) ){
+            $isotope_args['tax_query'] = array(
+                array(
+                    'taxonomy' => $tax,
+                    'field'    => 'slug',
+                    'terms'    => $term,
                 ),
-            )  );
+            );
         }
+
+        $isotope_loop = new WP_Query( $isotope_args );
 
         $isotope_output = '';
 
