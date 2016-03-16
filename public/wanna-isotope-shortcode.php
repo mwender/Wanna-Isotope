@@ -30,11 +30,30 @@ class Wanna_Isotope_Shortcode {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
+        $this->plugin_name = 'wanna-isotope';
 
 		// Register shortcode
 		add_shortcode( 'isotope', array( $this, 'shortcode_isotope' ) );
 
+        // Register scripts
+        add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts') );
+
 	}
+
+    /**
+     * Registers scripts and styles for later enqueuing by the shortcake
+     *
+     * @since 1.1.0
+     *
+     * @return void
+     */
+    public function register_scripts(){
+        wp_register_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wanna-isotope.css', array(), filemtime( plugin_dir_path( __FILE__ ) . 'css/wanna-isotope.css' ), 'all' );
+        wp_register_script( $this->plugin_name . 'isotope', plugin_dir_url( __FILE__ ) . 'js/isotope.pkgd.min.js', array( 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/isotope.pkgd.min.js' ), true );
+        wp_register_script( $this->plugin_name . 'isotope-cells-by-row', plugin_dir_url( __FILE__ ) . 'js/isotope.cells-by-row.js', array( $this->plugin_name . 'isotope' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/isotope.cells-by-row.js' ), true );
+        wp_register_script( $this->plugin_name . 'imagesloaded', plugin_dir_url( __FILE__ ) . 'js/imagesloaded.pkgd.min.js', array( 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/imagesloaded.pkgd.min.js' ), true );
+        wp_register_script( $this->plugin_name . 'isotope-init', plugin_dir_url( __FILE__ ) . 'js/isotope.init.js', array( $this->plugin_name . 'isotope', $this->plugin_name . 'isotope-cells-by-row', $this->plugin_name . 'imagesloaded', 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/isotope.init.js' ), true );
+    }
 
 	/**
 	 * Isotope output
@@ -56,6 +75,7 @@ class Wanna_Isotope_Shortcode {
             'order_by'  => 'menu_order',
             'tax'       => '',
             'term'      => '',
+            'layout'    => '',
         ), $atts) );
 
         if( null != $id ) {
@@ -141,38 +161,11 @@ class Wanna_Isotope_Shortcode {
 
         wp_reset_query();
 
-        $isotope_output .= '
-        <script type="text/javascript">
-            jQuery(document).ready(function($) {
-                var $container = $(\'#' . $id . '\');
-                $container.imagesLoaded( function(){
-                    $container.isotope({
-                      itemSelector: ".isotope-item",
-                      layoutMode: "masonry"
-                    });
-                });
-
-                var $optionSets = $(\'#filters-' . $id . '\'),
-                $optionLinks = $optionSets.find(\'a\');
-
-                $optionLinks.click(function(){
-                    var $this = $(this);
-                    // don\'t proceed if already active
-                    if ( $this.hasClass(\'active\') ) {
-                      return false;
-                    }
-                    var $optionSet = $this.parents(\'#filters-' . $id . '\');
-                    $optionSets.find(\'.active\').removeClass(\'active\');
-                    $this.addClass(\'active\');
-
-                    //When an item is clicked, sort the items.
-                     var selector = $(this).attr(\'data-filter\');
-                    $container.isotope({ filter: selector });
-
-                    return false;
-                });
-            });
-        </script>';
+        wp_enqueue_style( $this->plugin_name );
+        wp_enqueue_script( $this->plugin_name . 'isotope-init' );
+        $isovars = array( 'id' => $id );
+        $isovars['layoutMode'] = ( ! empty( $layout ) )? $layout : 'masonry';
+        wp_localize_script( $this->plugin_name . 'isotope-init', 'isovars', $isovars );
 
         return $isotope_output;
 
