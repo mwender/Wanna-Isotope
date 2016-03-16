@@ -151,7 +151,7 @@ class Wanna_Isotope_Shortcode {
                         $term_class .= $term->slug . ' ';
                     }
                 }
-                $isotope_output .= '<li class="isotope-item ' . $term_class . 'all">' . $image . '<h4><a href="' . get_the_permalink() . '">' . get_the_title() . '</a></h4></li>';
+                $isotope_output .= '<li class="isotope-item ' . $term_class . 'all">' . $image . '<h3><a href="' . get_the_permalink() . '">' . get_the_title() . '</a></h3></li>';
                 $image = '';
             endwhile;
 
