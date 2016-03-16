@@ -91,7 +91,7 @@ class Wanna_Isotope_Shortcode {
         }
 
         $isotope_output = '';
-        
+
         if ( $isotope_loop->have_posts() ) :
 
             if( $tax != null && $term == null ) {
@@ -123,17 +123,17 @@ class Wanna_Isotope_Shortcode {
                 $isotope_output .= '</ul>';
             }
 
-            $isotope_output .= '<ul ' . $id_output . ' class="isotope-content isotope">';  
+            $isotope_output .= '<ul ' . $id_output . ' class="isotope-content isotope">';
 
             while ( $isotope_loop->have_posts() ) : $isotope_loop->the_post();
-                if( has_post_thumbnail( $isotope_loop->ID ) ) {   
+                if( has_post_thumbnail( $isotope_loop->ID ) ) {
                     $image = '<a href="' . get_the_permalink() . '" title="' . get_the_title() . '">' . get_the_post_thumbnail( $isotope_loop->ID, 'medium' ) . '</a>';
                 }
                 if( $tax != null ) {
                     $tax_terms = get_the_terms( $isotope_loop->ID, $tax );
                     $term_class = '';
                     foreach( (array)$tax_terms as $term ) {
-                        $term_class .= $term->slug . ' '; 
+                        $term_class .= $term->slug . ' ';
                     }
                 }
                 $isotope_output .= '<li class="isotope-item ' . $term_class . 'all">' . $image . '</li>';
@@ -159,7 +159,7 @@ class Wanna_Isotope_Shortcode {
 
                 var $optionSets = $(\'#filters-' . $id . '\'),
                 $optionLinks = $optionSets.find(\'a\');
-             
+
                 $optionLinks.click(function(){
                     var $this = $(this);
                     // don\'t proceed if already active
@@ -169,14 +169,14 @@ class Wanna_Isotope_Shortcode {
                     var $optionSet = $this.parents(\'#filters-' . $id . '\');
                     $optionSets.find(\'.active\').removeClass(\'active\');
                     $this.addClass(\'active\');
-                 
+
                     //When an item is clicked, sort the items.
                      var selector = $(this).attr(\'data-filter\');
                     $container.isotope({ filter: selector });
 
                     return false;
                 });
-            }); 
+            });
         </script>';
 
         return $isotope_output;
