@@ -108,25 +108,21 @@ class Wanna_Isotope_Shortcode {
         $isotope_output = '';
 
         if ( $isotope_loop->have_posts() ) :
-
+            $isotope_output .= '<ul id="filters-' . $id . '" class="filters">';
+            $isotope_output .= '<li><a href="javascript:void(0)" title="filter all" data-filter=".all" class="active">All</a></li>';
             if( $tax != null && $term == null ) {
-                $isotope_output .= '<ul id="filters-' . $id . '" class="filters">';
                 $terms = get_terms( $tax );
                 $count = count($terms);
-                $isotope_output .= '<li><a href="javascript:void(0)" title="filter all" data-filter=".all" class="active">All</a></li>';
                 if ( $count > 0 ){
                     foreach ( $terms as $term ) {
                         $termname = strtolower($term->slug);
                         $isotope_output .= '<li><a href="javascript:void(0)" title="filter ' . $term->name . '" data-filter=".' . $termname . '">' . $term->name . '</a></li>';
                     }
                 }
-                $isotope_output .= '</ul>';
             } elseif ( $term != null ) {
-                $isotope_output .= '<ul id="filters-' . $id . '" class="filters">';
                 $term_id = get_term_by( 'slug', $term, $tax );
                 $terms = get_term_children( $term_id->term_id, $tax );
                 $count = count($terms);
-                $isotope_output .= '<li><a href="javascript:void(0)" title="filter all" data-filter=".all" class="active">All</a></li>';
                 if ( $count > 0 ){
                     foreach ( $terms as $term ) {
                         $single_term = get_term( $term, $tax );
@@ -135,8 +131,8 @@ class Wanna_Isotope_Shortcode {
                         $isotope_output .= '<li><a href="javascript:void(0)" title="filter ' . $termslug . '" data-filter=".' . $termslug . '">' . $termname . '</a></li>';
                     }
                 }
-                $isotope_output .= '</ul>';
             }
+            $isotope_output .= '</ul>';
 
             $isotope_output .= '<ul ' . $id_output . ' class="isotope-content isotope">';
 
