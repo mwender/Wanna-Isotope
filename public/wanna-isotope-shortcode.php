@@ -142,12 +142,12 @@ class Wanna_Isotope_Shortcode {
                 }
                 if( $tax != null ) {
                     $tax_terms = get_the_terms( $isotope_loop->ID, $tax );
-                    $term_class = '';
+                    $term_classes = array( 'all' );
                     foreach( (array)$tax_terms as $term ) {
-                        $term_class .= $term->slug . ' ';
+                        $term_classes[] = $term->slug;
                     }
                 }
-                $isotope_output .= '<li class="isotope-item ' . $term_class . 'all">' . $image . '<h3><a href="' . get_the_permalink() . '">' . get_the_title() . '</a></h3></li>';
+                $isotope_output .= '<li class="isotope-item ' . implode( ' ', $term_classes ) . '">' . $image . '<h3><a href="' . get_the_permalink() . '">' . get_the_title() . '</a></h3></li>';
                 $image = '';
             endwhile;
 
