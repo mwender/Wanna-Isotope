@@ -131,7 +131,7 @@ class Wanna_Isotope_Shortcode {
                         $termname = strtolower($single_term->name);
                         // Show top-level categories (categories w/o terms)
                         if( 0 == $single_term->count ){
-                            $isotope_output.= '<li><h4 class="term-title">' . ucfirst( $termname ) . '</h4>';
+                            $isotope_output.= '<li class="filter-group" data-filter-group="' . $termslug . '"><h4 class="term-title">' . ucfirst( $termname ) . '</h4>';
 
                             $child_terms = get_term_children( $single_term->term_id, $tax );
                             $isotope_output.= '<ul>';
@@ -139,7 +139,7 @@ class Wanna_Isotope_Shortcode {
                                 $child_term = get_term( $child_term_id, $tax );
                                 $termslug = strtolower($child_term->slug);
                                 $termname = strtolower($child_term->name);
-                                $isotope_output.= '<li><a href="javascript:void(0)" title="filter ' . $termslug . '" data-filter=".' . $termslug . '">' . $termname . ' <span class="count">(' . $child_term->count . ')</span></a></li>';
+                                $isotope_output.= '<li><a class="filter-button" href="javascript:void(0)" title="filter ' . $termslug . '" data-filter=".' . $termslug . '">' . $termname . ' <span class="count">(' . $child_term->count . ')</span></a></li>';
                             }
                             $isotope_output.= '</ul>';
                             $isotope_output.= '</li>';

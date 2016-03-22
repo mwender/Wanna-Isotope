@@ -7,23 +7,43 @@
         });
     });
 
+    var filters = {};
     var $optionSets = $('#filters-' + isovars.id),
     $optionLinks = $optionSets.find('a');
 
-    $optionLinks.click(function(){
+    $('.filters-list').on( 'click', '.filter-button', function(){
         var $this = $(this);
-        // don't proceed if already active
-        if ( $this.hasClass('active') ) {
-          return false;
+
+        // get group key
+        var $buttonGroup = $this.parents('.filter-group');
+        var filterGroup = $buttonGroup.attr('data-filter-group');
+        // set filter for group
+        if( $this.hasClass('active') ){
+            filters[ filterGroup ] = '';
+        } else {
+            filters[ filterGroup ] = $this.attr('data-filter');
         }
-        var $optionSet = $this.parents('#filters-' + isovars.id);
-        $optionSets.find('.active').removeClass('active');
-        $this.addClass('active');
-
-        //When an item is clicked, sort the items.
-         var selector = $(this).attr('data-filter');
-        $container.isotope({ filter: selector });
-
-        return false;
+        // combine filters
+        var filterValue = concatValues( filters );
+        $container.isotope({filter: filterValue});
+        // set .active
+        $('a.filter-button').removeClass('active');
+        for( var filterGroup in filters ){
+            $('a.filter-button[data-filter="' + filters[filterGroup] + '"]').addClass('active');
+        }
     });
+
+    $('.filters-list').on( 'click', '.clear-filters a.button', function(){
+        filters = {};
+        $('a.filter-button').removeClass('active');
+        $container.isotope({filter: ''});
+    });
+
+    function concatValues( obj ){
+        var value = '';
+        for( var prop in obj ){
+            value += obj[prop];
+        }
+        return value;
+    }
 })(jQuery);

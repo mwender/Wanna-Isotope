@@ -1,5 +1,6 @@
 @bordercolor: lighten(#000,92%);
 @buttonbkgrd: lighten(#000,99%);
+@b2torange: #ec6b17;
 
 .isotope-wrapper:after{
     content: '';
@@ -135,6 +136,10 @@ ul.filters-list{
       border: 1px solid @bordercolor;
       border-radius: 3px;
 
+      &:hover{
+        text-decoration: none;
+        background-color: lighten(#000,92%);
+      }
     }
 
     ul{
@@ -155,7 +160,18 @@ ul.filters-list{
         &:hover,
         &.active{
           text-decoration: none;
-          background-color: lighten(#000,94%);
+
+        }
+        &:hover{
+          background-color: lighten(#000,92%);
+        }
+        &.active{
+          background-color: @b2torange;
+          color: #fff;
+
+          span{
+            color: lighten(#000,90%);
+          }
         }
 
         span{
