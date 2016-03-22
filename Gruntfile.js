@@ -32,7 +32,7 @@ module.exports = function(grunt){
             livereload: true,
           },
           styles: {
-            files: ['public/less/**/*.less'], // which files to watch
+            files: ['public/less/**/*.less','public/js/isotope.init.js'], // which files to watch
             tasks: ['less:development'],
             options: {
               nospawn: true
