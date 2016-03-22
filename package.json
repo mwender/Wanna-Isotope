@@ -1,0 +1,23 @@
+{
+  "name": "b2t-divi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "functions.php",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/mwender/b2t-divi-theme.git"
+  },
+  "author": "Michael Wender",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/mwender/b2t-divi-theme#readme",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-less": "^1.1.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-text-replace": "^0.4.0",
+    "load-grunt-tasks": "^3.3.0"
+  }
+}
