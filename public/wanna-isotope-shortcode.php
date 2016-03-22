@@ -48,7 +48,7 @@ class Wanna_Isotope_Shortcode {
      * @return void
      */
     public function register_scripts(){
-        wp_register_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wanna-isotope.css', array(), filemtime( plugin_dir_path( __FILE__ ) . 'css/wanna-isotope.css' ), 'all' );
+        wp_register_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/main.css', array(), filemtime( plugin_dir_path( __FILE__ ) . 'css/main.css' ), 'all' );
         wp_register_script( $this->plugin_name . 'isotope', plugin_dir_url( __FILE__ ) . 'js/isotope.pkgd.min.js', array( 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/isotope.pkgd.min.js' ), true );
         wp_register_script( $this->plugin_name . 'isotope-cells-by-row', plugin_dir_url( __FILE__ ) . 'js/isotope.cells-by-row.js', array( $this->plugin_name . 'isotope' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/isotope.cells-by-row.js' ), true );
         wp_register_script( $this->plugin_name . 'imagesloaded', plugin_dir_url( __FILE__ ) . 'js/imagesloaded.pkgd.min.js', array( 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/imagesloaded.pkgd.min.js' ), true );
@@ -105,11 +105,11 @@ class Wanna_Isotope_Shortcode {
 
         $isotope_loop = new WP_Query( $isotope_args );
 
-        $isotope_output = '';
+        $isotope_output = '<div class="isotope-wrapper">';
 
         if ( $isotope_loop->have_posts() ) :
-            $isotope_output .= '<ul id="filters-' . $id . '" class="filters">';
-            $isotope_output .= '<li><a href="javascript:void(0)" title="filter all" data-filter=".all" class="active">All</a></li>';
+            $isotope_output .= '<ul id="filters-' . $id . '" class="filters-list">';
+            $isotope_output .= '<li class="clear-filters">Filters <a href="javascript:void(0)" title="filter all" data-filter=".all" class="button">Clear All</a></li>';
             if( $tax != null && $term == null ) {
                 $terms = get_terms( $tax );
                 $count = count($terms);
@@ -125,16 +125,31 @@ class Wanna_Isotope_Shortcode {
                 $count = count($terms);
                 if ( $count > 0 ){
                     foreach ( $terms as $term ) {
+
                         $single_term = get_term( $term, $tax );
                         $termslug = strtolower($single_term->slug);
                         $termname = strtolower($single_term->name);
-                        $isotope_output .= '<li><a href="javascript:void(0)" title="filter ' . $termslug . '" data-filter=".' . $termslug . '">' . $termname . '</a></li>';
+                        // Show top-level categories (categories w/o terms)
+                        if( 0 == $single_term->count ){
+                            $isotope_output.= '<li><h4 class="term-title">' . ucfirst( $termname ) . '</h4>';
+
+                            $child_terms = get_term_children( $single_term->term_id, $tax );
+                            $isotope_output.= '<ul>';
+                            foreach( $child_terms as $child_term_id ){
+                                $child_term = get_term( $child_term_id, $tax );
+                                $termslug = strtolower($child_term->slug);
+                                $termname = strtolower($child_term->name);
+                                $isotope_output.= '<li><a href="javascript:void(0)" title="filter ' . $termslug . '" data-filter=".' . $termslug . '">' . $termname . ' <span class="count">(' . $child_term->count . ')</span></a></li>';
+                            }
+                            $isotope_output.= '</ul>';
+                            $isotope_output.= '</li>';
+                        }
                     }
                 }
             }
             $isotope_output .= '</ul>';
 
-            $isotope_output .= '<ul ' . $id_output . ' class="isotope-content isotope">';
+            $isotope_output .= '<ul ' . $id_output . ' class="isotope-content isotope with-filters-list">';
 
             while ( $isotope_loop->have_posts() ) : $isotope_loop->the_post();
                 if( has_post_thumbnail( $isotope_loop->ID ) ) {
@@ -151,7 +166,7 @@ class Wanna_Isotope_Shortcode {
                 $image = '';
             endwhile;
 
-            $isotope_output .= '</ul>';
+            $isotope_output .= '</ul></div><!-- .isotope-wrapper -->';
 
         endif;
 
